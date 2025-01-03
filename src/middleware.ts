@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCookieServer } from '@/lib/cookieServer'
 import { api } from "@/services/api"
-import { stringify } from 'querystring';
+//import { stringify } from 'querystring';
 
 export async function middleware(req: NextRequest){
-  
   const { pathname } = req.nextUrl
 
   if(pathname.startsWith("/_next") || pathname === "/"){
@@ -19,7 +18,7 @@ export async function middleware(req: NextRequest){
       return NextResponse.redirect(new URL("/", req.url))
     }
 
-    const isValid =  validateToken(token)
+    const isValid = await validateToken(token)
     console.log(isValid);
 
     if(!isValid){
