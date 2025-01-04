@@ -1,86 +1,90 @@
-import Image from "next/image"
-import Link from "next/link"
-import styles from '../page.module.scss'
+//"use client" // --> redenrizado do lado do cliente
 import logoImg from '/public/logo.svg'
+import Image from 'next/image'
+import Link from 'next/link'
+import styles from '../page.module.scss'
+import { Handlee } from 'next/font/google'
 import { api } from '@/services/api'
 import { redirect } from 'next/navigation'
 
 export default function Signup(){
 
-  async function handleRegister(formData: FormData){
-    "use server"
+   async function handleRegister(formData: FormData){
+        "use server" // --> redenrizado do lado do servidor
+        const name = formData.get("name")
+        const email = formData.get("email")
+        const password = formData.get("password")
+      
+        if (name === "" || email === "" || password === ""){
+            console.log("Preencha todos os campos")
+            return;
+        }
 
-    const name = formData.get("name")
-    const email = formData.get("email")
-    const password = formData.get("password")
+        try{
+            await api.post("/users", {
+                name,
+                email,
+                password
+            })
+        }catch(err){
+            console.log("error")
+            console.log(err)
+        }
 
-    if( name === "" || email === "" || password === ""){
-      console.log("PREENCHA TODOS OS CAMPOS")
-      return;
+        redirect("/")
     }
 
-    try{
-      await api.post("/users", {
-        name,
-        email,
-        password
-      })
 
-    }catch(err){
-      console.log("error")
-      console.log(err)
-    }
+    return(
+        <>
+            <div className={styles.containerCenter}>
+                <Image
+                    src={logoImg}
+                     alt="Logo da pizzaria"
+                />
 
-    redirect("/")
-  }
+                <section className={styles.Login}>
+                    <h1>Criando uma conta</h1>
+                    <form action={handleRegister}>
+                        <input
+                            type="text"
+                            required
+                            name="name"
+                            placeholder="Digite seu nome"
+                            className={styles.input}
+                        />
 
-  return(
-    <>
-      <div className={styles.containerCenter}>
-        <Image
-          src={logoImg}
-          alt="Logo da pizzaria"
-        />
+                        <input
+                            type="email"
+                            required
+                            name="email"
+                            placeholder="Digite seu email..."
+                            className={styles.input}
+                        />
 
-        <section className={styles.login}>
-          <h1>Criando sua conta</h1>
-          <form action={handleRegister}>
-            <input 
-              type="text"
-              required
-              name="name"
-              placeholder="Digite seu nome..."
-              className={styles.input}
-            />
 
-            <input 
-              type="email"
-              required
-              name="email"
-              placeholder="Digite seu email..."
-              className={styles.input}
-            />
+                        <input
+                            type="password"
+                            required
+                            name="password"
+                            placeholder="Cadastre sua senha"
+                            className={styles.input}
+                        />
 
-            <input 
-              type="password"
-              required
-              name="password"
-              placeholder="***********"
-              className={styles.input}
-            />
+                        <button type="submit" className={styles.button}>
+                            Cadastrar
+                        </button>
 
-            <button type="submit" className={styles.button}>
-              Cadastrar
-            </button>
-          </form>
+                    </form>
 
-          <Link href="/" className={styles.text}>
-            Já possui uma conta? Faça o ligin
-          </Link>
+                    <Link href="/" className={styles.text}>
 
-        </section>
+                        Já possui uma conta? Faça seu login
+                    </Link>
 
-      </div> 
-    </>
-  )
+                </section>
+
+            </div>
+        </>
+    )
 }
