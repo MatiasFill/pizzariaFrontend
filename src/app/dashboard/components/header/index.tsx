@@ -37,7 +37,7 @@ export function Header(){
                         Categoria
                     </Link>
                     <Link href="/dashboard/product">
-                        Produto
+                        Cardápio
                     </Link>
 
                     <form action= {handleLogout}>
