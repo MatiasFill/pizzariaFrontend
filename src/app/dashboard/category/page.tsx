@@ -35,7 +35,7 @@ export default async function Category() {
     }
     return(
         <main className={styles.container}>
-            <h1>Novo gategoria</h1>
+            <h1>Cadastrar nova Categoria</h1>
 
             <form 
                 className={styles.form}
